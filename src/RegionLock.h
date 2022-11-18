@@ -8,7 +8,7 @@ public:
 	
 private:
     void OnUpdateArea(Player* player, uint32 oldArea, uint32 newArea) override;
-}
+};
 
 class RegionLockWorldScript : public WorldScript
 {
@@ -17,6 +17,6 @@ public:
 
 private:
 	void OnAfterConfigLoad(bool reload) override;
-}
+};
 
 #endif
