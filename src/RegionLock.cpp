@@ -7,34 +7,33 @@
 #include "Config.h"
 #include "Chat.h"
 
+#include "RegionLock.h"
+
 std::vector<uint32> unlockedAreas;
 
-// Add player scripts
-class RegionLockPlayerScript : public PlayerScript
+void RegionLockPlayerScript::OnUpdateArea(Player* player, uint32 oldArea, uint32 newArea)
 {
-public:
-    RegionLockPlayerScript() : PlayerScript("RegionLockPlayerScript") { }
+	if(oldArea == newArea)
+	{
+		return;
+	}
+	
+	if(player->isGMChat())
+	{
+		return;
+	}
+	
+	if (!std::count(unlockedAreas.begin(), unlockedAreas.end(), newArea))
+	{
+		player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->m_homebindO);
+		ChatHandler(player->GetSession()).SendSysMessage("Sorry, this area is not yet unlocked.");
+	}
+}
 
-private:
-    void OnUpdateArea(Player* player, uint32 oldArea, uint32 newArea) override
-    {
-		if(oldArea == newArea)
-		{
-			return;
-		}
-		
-		if(player->isGMChat())
-		{
-			return;
-		}
-		
-        if (!std::count(unlockedAreas.begin(), unlockedAreas.end(), newArea))
-        {
-            player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->m_homebindO);
-			ChatHandler(player->GetSession()).SendSysMessage("Sorry, this area is not yet unlocked.");
-        }
-    }
-};
+void RegionLockWorldScript::OnAfterConfigLoad(bool reload)
+{
+	LOG_INFO("module", "World Script from RegionLock");
+}
 
 // Add all scripts in one
 void AddRegionLockScripts()
@@ -46,5 +45,6 @@ void AddRegionLockScripts()
 	unlockedAreas.push_back(34); //Echo Ridge Mine
 	unlockedAreas.push_back(59); //Northshire Vineyard
 
+	new RegionLockWorldScript();
     new RegionLockPlayerScript();
 }
