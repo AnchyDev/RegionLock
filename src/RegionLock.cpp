@@ -23,6 +23,11 @@ private:
 			return;
 		}
 		
+		if(player->isGMChat())
+		{
+			return;
+		}
+		
         if (!std::count(unlockedAreas.begin(), unlockedAreas.end(), newArea))
         {
             player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->m_homebindO);
