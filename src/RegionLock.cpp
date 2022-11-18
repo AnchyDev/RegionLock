@@ -14,6 +14,11 @@ bool loaded;
 
 void RegionLockPlayerScript::OnUpdateArea(Player* player, uint32 oldArea, uint32 newArea)
 {
+	if(!loaded)
+	{
+		return;
+	}
+	
 	if(oldArea == newArea)
 	{
 		return;
@@ -53,7 +58,6 @@ void RegionLockWorldScript::OnAfterConfigLoad(bool reload)
 		
         uint32 areaId = fields[0].Get<uint32>();
 		unlockedAreas.push_back(areaId);
-		LOG_INFO("module", "Loading AreaId {}", areaId);
 		
     } while (qResult->NextRow());
 	
@@ -66,9 +70,5 @@ void RegionLockWorldScript::OnAfterConfigLoad(bool reload)
 void AddRegionLockScripts()
 {
 	new RegionLockWorldScript();
-	
-	if(loaded)
-	{
-		new RegionLockPlayerScript();
-	}
+	new RegionLockPlayerScript();
 }
