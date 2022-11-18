@@ -10,6 +10,7 @@
 #include "RegionLock.h"
 
 std::vector<uint32> unlockedAreas;
+bool loaded;
 
 void RegionLockPlayerScript::OnUpdateArea(Player* player, uint32 oldArea, uint32 newArea)
 {
@@ -34,22 +35,39 @@ void RegionLockWorldScript::OnAfterConfigLoad(bool reload)
 {
 	if(reload)
 	{
-		return;
+		unlockedAreas.clear();
 	}
 	
-	LOG_INFO("module", "World Script from RegionLock");
+	QueryResult qResult = WorldDatabase.Query("SELECT AreaId FROM woc_regionlock_area");
+	
+	if (!qResult)
+    {
+        LOG_INFO("module", "Failed to load 'woc_regionlock_area' table from world database.");
+		loaded = false;
+        return;
+    }
+	
+	do
+    {
+        Field* fields = qResult->Fetch();
+		
+        uint32 areaId = fields[0].Get<uint32>();
+		unlockedAreas.push_back(areaId);
+		
+    } while (qResult->NextRow());
+	
+	loaded = true;
+	
+	LOG_INFO("module", "Finished loading RegionLock.");
 }
 
 // Add all scripts in one
 void AddRegionLockScripts()
 {
-	//Elwynn Forest
-    unlockedAreas.push_back(9); //Northshire Valley
-	unlockedAreas.push_back(24); //Northshire River
-	unlockedAreas.push_back(24); //Northshire Abbey
-	unlockedAreas.push_back(34); //Echo Ridge Mine
-	unlockedAreas.push_back(59); //Northshire Vineyard
-
 	new RegionLockWorldScript();
-    new RegionLockPlayerScript();
+	
+	if(loaded)
+	{
+		new RegionLockPlayerScript();
+	}
 }
