@@ -32,6 +32,11 @@ void RegionLockPlayerScript::OnUpdateArea(Player* player, uint32 oldArea, uint32
 
 void RegionLockWorldScript::OnAfterConfigLoad(bool reload)
 {
+	if(reload)
+	{
+		return;
+	}
+	
 	LOG_INFO("module", "World Script from RegionLock");
 }
 
