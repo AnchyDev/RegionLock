@@ -18,11 +18,16 @@ public:
 private:
     void OnUpdateArea(Player* player, uint32 oldArea, uint32 newArea) override
     {
+		if(oldArea == newArea)
+		{
+			return;
+		}
+		
         if (!std::count(unlockedAreas.begin(), unlockedAreas.end(), newArea))
         {
             player->TeleportTo(player->m_homebindMapId, player->m_homebindX, player->m_homebindY, player->m_homebindZ, player->m_homebindO);
+			ChatHandler(player->GetSession()).SendSysMessage("Sorry, this area is not yet unlocked.");
         }
-        LOG_INFO("module", "Changed from {} to {}", oldArea, newArea);
     }
 };
 
