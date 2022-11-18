@@ -29,9 +29,12 @@ private:
 // Add all scripts in one
 void AddRegionLockScripts()
 {
-    unlockedAreas.push_back(9);
-    unlockedAreas.push_back(12);
-    unlockedAreas.push_back(18);
+	//Elwynn Forest
+    unlockedAreas.push_back(9); //Northshire Valley
+	unlockedAreas.push_back(24); //Northshire River
+	unlockedAreas.push_back(24); //Northshire Abbey
+	unlockedAreas.push_back(34); //Echo Ridge Mine
+	unlockedAreas.push_back(59); //Northshire Vineyard
 
     new RegionLockPlayerScript();
 }
