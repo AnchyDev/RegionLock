@@ -53,6 +53,7 @@ void RegionLockWorldScript::OnAfterConfigLoad(bool reload)
 		
         uint32 areaId = fields[0].Get<uint32>();
 		unlockedAreas.push_back(areaId);
+		LOG_INFO("module", "Loading AreaId {}", areaId);
 		
     } while (qResult->NextRow());
 	
